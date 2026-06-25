@@ -39,9 +39,25 @@
     @media(max-width:860px){.checks{grid-template-columns:1fr}}
     .report{background:#fff;color:#111827;border:1px solid #cbd5e1;border-radius:12px;padding:22px}.report h2{border:0;padding:0;margin-bottom:4px}.report table{box-shadow:none}.report .report-title{display:flex;justify-content:space-between;gap:12px;border-bottom:2px solid #111827;padding-bottom:10px;margin-bottom:14px}.report .report-title small{color:#475569}.kpiLine{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}.kpiLine .metric{box-shadow:none;padding:10px}.copybox{white-space:pre-wrap;background:#0f172a;color:#e2e8f0;border-radius:14px;padding:14px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;max-height:360px;overflow:auto}.hidden{display:none!important}
     @media print{header,.nav,.toolbar,.no-print,.steps,#aiSection,#inputSections{display:none!important}body{background:#fff}main{padding:0}.wrap{max-width:100%}.card{box-shadow:none;border:0;padding:0}.report{border:0;border-radius:0}.col-12{grid-column:span 12}@page{size:A4;margin:12mm}.report{font-size:12px}.report h2{font-size:18px}.kpiLine{grid-template-columns:repeat(4,1fr)} }
+    #privacyModal{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px}
+    #privacyModal.hidden{display:none}
+    #privacyModal .modal-box{background:#fff;border-radius:16px;padding:32px;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(15,23,42,.3)}
+    #privacyModal .modal-title{margin:0 0 16px;font-size:20px;color:#155e75;line-height:1.5}
+    #privacyModal .modal-body{margin:0 0 24px;font-size:14.5px;line-height:1.8;color:#1f2937}
+    #privacyModal .modal-btn{background:#155e75;color:#fff;border:none;border-radius:999px;padding:12px 32px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s}
+    #privacyModal .modal-btn:hover{opacity:.85}
+    .pii-warning{display:none;color:#b91c1c;font-size:12px;margin-top:4px;font-weight:700;padding:4px 8px;background:#fef2f2;border-radius:6px}
+    input.pii-alert,textarea.pii-alert{border-color:#b91c1c!important;box-shadow:0 0 0 2px rgba(185,28,28,.25)!important}
   </style>
 </head>
 <body>
+<div id="privacyModal" role="dialog" aria-modal="true" aria-labelledby="privacyModalTitle">
+  <div class="modal-box">
+    <h2 class="modal-title" id="privacyModalTitle">このツールは匿名化・守秘義務対応ツールです。</h2>
+    <p class="modal-body">会社名・個人名・住所・電話番号などの個人情報・機密情報は入力しないようにお願いします。</p>
+    <button class="modal-btn" onclick="closePrivacyModal()">理解しました</button>
+  </div>
+</div>
   <header>
     <div class="wrap">
       <h1>TKC財務リスマネ・アセスメント入門ツール</h1>
@@ -72,6 +88,7 @@
         <div class="card col-12 soft">
           <h2>匿名化・守秘義務対応の考え方</h2>
           <p>このツールは、関与先名、正式な取引先名、住所、代表者名、担当者名、証券番号などを入力しない前提です。入力するのは、業種、概算の財務数字、取引先A・仕入先Bのような記号、リスク対応メモに限定します。</p>
+          <p style="background:#ecfdf5;border:1px solid #bbf7d0;border-radius:10px;padding:12px;font-size:13.5px;margin:10px 0"><strong>このツールは特定の企業名・個人名・住所・連絡先を入力しない設計です。</strong>取引先はA・B・C等の記号で管理し、金額は概算値でご入力ください。</p>
           <div class="assessment">
             <div class="assessBox"><strong>入れない</strong><p>会社名、個人名、住所、電話番号、メール、取引先の正式名称、証券番号。</p></div>
             <div class="assessBox"><strong>入れてよい</strong><p>業種、概算金額、取引先Aなどの記号、在庫日数、停止日数、対応方針。</p></div>
@@ -94,9 +111,9 @@
         <div class="card col-12" id="basic">
           <h2>1. 基本数字</h2>
           <div class="row">
-            <div class="field span-3"><label>匿名管理ID（任意）</label><input id="clientCode" placeholder="例：案件01、A社ではなく記号"></div>
+            <div class="field span-3"><label>匿名管理ID（任意）</label><input id="clientCode" placeholder="※会社名・個人名・住所は入力しないでください"><span class="pii-warning" id="warn-clientCode">⚠️ 会社名・個人名と思われる入力があります。匿名化してご入力ください。</span></div>
             <div class="field span-3"><label>業種</label><input id="industry" placeholder="例：製造業"></div>
-            <div class="field span-3"><label>担当者イニシャル（任意）</label><input id="assessor" placeholder="例：T、担当者名は入れない"></div>
+            <div class="field span-3"><label>担当者イニシャル（任意）</label><input id="assessor" placeholder="※会社名・個人名・住所は入力しないでください"><span class="pii-warning" id="warn-assessor">⚠️ 会社名・個人名と思われる入力があります。匿名化してご入力ください。</span></div>
             <div class="field span-3"><label>確認日</label><input id="date" type="date"></div>
             <div class="field span-3"><label>年間売上高</label><input id="sales" type="text" inputmode="numeric" data-comma="1" placeholder="円"></div>
             <div class="field span-3"><label>年間粗利益</label><input id="grossProfit" type="text" inputmode="numeric" data-comma="1" placeholder="円"></div>
@@ -152,7 +169,7 @@
             <div class="field span-3"><label>その他復旧費用</label><input id="recoveryCost" type="text" inputmode="numeric" data-comma="1" placeholder="円"></div>
             <div class="field span-3"><label>対応方針</label><select id="interruptionResponse"><option value="低減">低減：代替先・復旧手順を準備</option><option value="移転">移転：補償・契約で外部へ移す</option><option value="保有">保有：現預金・自己資本で耐える</option><option value="回避">回避：危険な立地・工程を避ける</option></select></div>
             <div class="field span-3"><label>初動の準備状況</label><select id="recoveryPrepared"><option value="未確認">未確認</option><option value="一部あり">一部あり</option><option value="概ねあり">概ねあり</option></select></div>
-            <div class="field span-12"><label>事業停止時に一番困ること</label><textarea id="interruptionMemo" placeholder="例：納期遅延で主要取引先を失う、外注先が未定、仮移転先がない"></textarea></div>
+            <div class="field span-12"><label>事業停止時に一番困ること</label><textarea id="interruptionMemo" placeholder="※会社名・個人名・住所は入力しないでください"></textarea><span class="pii-warning" id="warn-interruptionMemo">⚠️ 会社名・個人名と思われる入力があります。匿名化してご入力ください。</span></div>
           </div>
           <div class="grid" id="interruptionMetrics"></div>
           <h3>初動確認チェック</h3>
@@ -171,7 +188,7 @@
           <p class="note">BAST等の1人当たり自己資本額を入力し、会社規模に応じた目標自己資本額を確認します。小さな損害や一時的な売上減少は、保険だけでなく自己資本と現預金で保有できる体質づくりが重要です。</p>
           <div class="grid" id="capitalMetrics"></div>
           <div class="row">
-            <div class="field span-12"><label>自己資本についての面談メモ</label><textarea id="capitalMemo" placeholder="例：5年で目標自己資本に近づけるため、毎年の内部留保目標を決めたい"></textarea></div>
+            <div class="field span-12"><label>自己資本についての面談メモ</label><textarea id="capitalMemo" placeholder="※会社名・個人名・住所は入力しないでください"></textarea><span class="pii-warning" id="warn-capitalMemo">⚠️ 会社名・個人名と思われる入力があります。匿名化してご入力ください。</span></div>
           </div>
         </div>
 
@@ -179,10 +196,10 @@
           <h2>6. リスク対応の整理</h2>
           <p class="note">対応は1つに限りません。入口資料では「どれが考えられるか」を一緒に確認するだけで十分です。</p>
           <div class="grid">
-            <div class="card soft col-3"><h3>移転</h3><p>保険、契約、保証、外注などでリスクを外部へ移す。</p><textarea id="transferMemo" placeholder="例：取引信用保険、休業補償、外注契約の確認"></textarea></div>
-            <div class="card soft col-3"><h3>回避</h3><p>危険な取引・立地・工程・与信を避ける、縮小する。</p><textarea id="avoidMemo" placeholder="例：与信不安先の取引上限、単独依存を避ける"></textarea></div>
-            <div class="card soft col-3"><h3>保有</h3><p>自己資本、現預金、緊急資金枠で自社が受け止める。</p><textarea id="retainMemo" placeholder="例：現預金3か月分、自己資本目標の設定"></textarea></div>
-            <div class="card soft col-3"><h3>低減</h3><p>発生可能性や影響額を小さくする。</p><textarea id="reduceMemo" placeholder="例：取引先分散、仕入先分散、BCP、代替先確保"></textarea></div>
+            <div class="card soft col-3"><h3>移転</h3><p>保険、契約、保証、外注などでリスクを外部へ移す。</p><textarea id="transferMemo" placeholder="※会社名・個人名・住所は入力しないでください"></textarea><span class="pii-warning" id="warn-transferMemo">⚠️ 会社名・個人名と思われる入力があります。匿名化してご入力ください。</span></div>
+            <div class="card soft col-3"><h3>回避</h3><p>危険な取引・立地・工程・与信を避ける、縮小する。</p><textarea id="avoidMemo" placeholder="※会社名・個人名・住所は入力しないでください"></textarea><span class="pii-warning" id="warn-avoidMemo">⚠️ 会社名・個人名と思われる入力があります。匿名化してご入力ください。</span></div>
+            <div class="card soft col-3"><h3>保有</h3><p>自己資本、現預金、緊急資金枠で自社が受け止める。</p><textarea id="retainMemo" placeholder="※会社名・個人名・住所は入力しないでください"></textarea><span class="pii-warning" id="warn-retainMemo">⚠️ 会社名・個人名と思われる入力があります。匿名化してご入力ください。</span></div>
+            <div class="card soft col-3"><h3>低減</h3><p>発生可能性や影響額を小さくする。</p><textarea id="reduceMemo" placeholder="※会社名・個人名・住所は入力しないでください"></textarea><span class="pii-warning" id="warn-reduceMemo">⚠️ 会社名・個人名と思われる入力があります。匿名化してご入力ください。</span></div>
           </div>
         </div>
       </section>
@@ -218,7 +235,7 @@ function initTables(){
   cbody.innerHTML='';
   for(let i=1;i<=5;i++){
     cbody.insertAdjacentHTML('beforeend',`<tr data-row="c${i}">
-      <td><input id="c${i}Name" placeholder="例：取引先A"></td>
+      <td><select id="c${i}Name"><option value="">--</option><option value="取引先A">取引先A</option><option value="取引先B">取引先B</option><option value="取引先C">取引先C</option><option value="取引先D">取引先D</option><option value="取引先E">取引先E</option></select></td>
       <td><input id="c${i}Sales" type="text" inputmode="numeric" data-comma="1"></td>
       <td><input id="c${i}GP" type="text" inputmode="numeric" data-comma="1"></td>
       <td><input id="c${i}Recv" type="text" inputmode="numeric" data-comma="1"></td>
@@ -231,8 +248,8 @@ function initTables(){
   sbody.innerHTML='';
   for(let i=1;i<=3;i++){
     sbody.insertAdjacentHTML('beforeend',`<tr data-row="s${i}">
-      <td><input id="sp${i}Name" placeholder="例：仕入先A"></td>
-      <td><input id="sp${i}Item" placeholder="材料・商品"></td>
+      <td><select id="sp${i}Name"><option value="">--</option><option value="仕入先A">仕入先A</option><option value="仕入先B">仕入先B</option><option value="仕入先C">仕入先C</option><option value="仕入先D">仕入先D</option><option value="仕入先E">仕入先E</option></select></td>
+      <td><input id="sp${i}Item" placeholder="※会社名・個人名・住所は入力しないでください"><span class="pii-warning" id="warn-sp${i}Item">⚠️ 会社名・個人名と思われる入力があります。匿名化してご入力ください。</span></td>
       <td><input id="sp${i}Purchase" type="text" inputmode="numeric" data-comma="1"></td>
       <td><input id="sp${i}AffectedSales" type="text" inputmode="numeric" data-comma="1"></td>
       <td><input id="sp${i}Stock" type="number" min="0" step="1" placeholder="日"></td>
@@ -389,7 +406,7 @@ function renderPrompt(d){
   document.getElementById('aiPrompt').textContent = prompt;
 }
 
-function resetAll(){ if(!confirm('入力内容をリセットしますか？')) return; document.querySelectorAll('input,textarea').forEach(el=>{ if(el.type==='checkbox') el.checked=false; else if(el.id==='businessDays') el.value=240; else if(el.id==='targetYears') el.value=5; else if(el.id==='stopDays') el.value=30; else if(el.id==='decreaseRate') el.value=100; else if(el.type==='date') el.value=new Date().toISOString().slice(0,10); else el.value='';}); document.querySelectorAll('select').forEach(el=>el.selectedIndex=0); calc(); }
+function resetAll(){ if(!confirm('入力内容をリセットしますか？')) return; document.querySelectorAll('input,textarea').forEach(el=>{ if(el.type==='checkbox') el.checked=false; else if(el.id==='businessDays') el.value=240; else if(el.id==='targetYears') el.value=5; else if(el.id==='stopDays') el.value=30; else if(el.id==='decreaseRate') el.value=100; else if(el.type==='date') el.value=new Date().toISOString().slice(0,10); else el.value='';}); document.querySelectorAll('select').forEach(el=>el.selectedIndex=0); document.querySelectorAll('.pii-warning').forEach(el=>el.style.display='none'); document.querySelectorAll('.pii-alert').forEach(el=>el.classList.remove('pii-alert')); calc(); }
 function fillSample(){
   set('clientCode','SAMPLE-001'); set('industry','製造業'); set('assessor','T.K'); set('date','2026-06-25');
   set('sales',500000000); set('grossProfit',150000000); set('operatingIncome',30000000); set('cash',80000000); set('equity',120000000); set('totalAssets',350000000); set('employees',45); set('businessDays',250); set('monthlyFixed',8000000); set('monthlyDebt',1500000); set('bastEquityPerEmp',2666000); set('targetYears',5);
@@ -418,9 +435,23 @@ document.addEventListener('input', e=>{
     if(abs) el.value=(neg?'-':'')+parseInt(abs,10).toLocaleString('ja-JP');
     else el.value=neg?'-':'';
   }
+  checkPII(el);
   calc();
 });
 document.addEventListener('change', e=>calc());
+const PII_RE=/株式会社|有限会社|合同会社|一般社団法人|一般財団法人|公益社団法人|公益財団法人|医療法人|社会福祉法人|特定非営利活動法人|NPO法人|[様氏殿御中]/;
+function checkPII(el){
+  if(el.dataset.comma==='1'||el.type==='number'||el.type==='date'||el.type==='checkbox'||el.tagName==='SELECT') return;
+  const hasPII=PII_RE.test(el.value);
+  const warnEl=el.parentElement.querySelector('.pii-warning');
+  el.classList.toggle('pii-alert',hasPII);
+  if(warnEl) warnEl.style.display=hasPII?'block':'none';
+}
+function closePrivacyModal(){
+  document.getElementById('privacyModal').classList.add('hidden');
+  sessionStorage.setItem('privacyAgreed','1');
+}
+if(sessionStorage.getItem('privacyAgreed')) document.getElementById('privacyModal').classList.add('hidden');
 initTables();
 set('date',new Date().toISOString().slice(0,10));
 calc();
