@@ -98,17 +98,17 @@
             <div class="field span-3"><label>業種</label><input id="industry" placeholder="例：製造業"></div>
             <div class="field span-3"><label>担当者イニシャル（任意）</label><input id="assessor" placeholder="例：T、担当者名は入れない"></div>
             <div class="field span-3"><label>確認日</label><input id="date" type="date"></div>
-            <div class="field span-3"><label>年間売上高</label><input id="sales" type="number" min="0" step="10000" placeholder="円"></div>
-            <div class="field span-3"><label>年間粗利益</label><input id="grossProfit" type="number" min="0" step="10000" placeholder="円"></div>
-            <div class="field span-3"><label>営業利益</label><input id="operatingIncome" type="number" step="10000" placeholder="円"></div>
-            <div class="field span-3"><label>現預金</label><input id="cash" type="number" min="0" step="10000" placeholder="円"></div>
-            <div class="field span-3"><label>自己資本額</label><input id="equity" type="number" step="10000" placeholder="円"></div>
-            <div class="field span-3"><label>総資産（任意）</label><input id="totalAssets" type="number" min="0" step="10000" placeholder="円"></div>
+            <div class="field span-3"><label>年間売上高</label><input id="sales" type="text" inputmode="numeric" data-comma="1" placeholder="円"></div>
+            <div class="field span-3"><label>年間粗利益</label><input id="grossProfit" type="text" inputmode="numeric" data-comma="1" placeholder="円"></div>
+            <div class="field span-3"><label>営業利益</label><input id="operatingIncome" type="text" inputmode="numeric" data-comma="1" placeholder="円"></div>
+            <div class="field span-3"><label>現預金</label><input id="cash" type="text" inputmode="numeric" data-comma="1" placeholder="円"></div>
+            <div class="field span-3"><label>自己資本額</label><input id="equity" type="text" inputmode="numeric" data-comma="1" placeholder="円"></div>
+            <div class="field span-3"><label>総資産（任意）</label><input id="totalAssets" type="text" inputmode="numeric" data-comma="1" placeholder="円"></div>
             <div class="field span-3"><label>従業員数</label><input id="employees" type="number" min="0" step="1" placeholder="人"></div>
             <div class="field span-3"><label>年間営業日数</label><input id="businessDays" type="number" min="1" step="1" value="240"></div>
-            <div class="field span-3"><label>月間固定費</label><input id="monthlyFixed" type="number" min="0" step="10000" placeholder="円"></div>
-            <div class="field span-3"><label>月間借入返済額</label><input id="monthlyDebt" type="number" min="0" step="10000" placeholder="円"></div>
-            <div class="field span-3"><label>BAST等 1人当たり自己資本額</label><input id="bastEquityPerEmp" type="number" min="0" step="10000" placeholder="円"></div>
+            <div class="field span-3"><label>月間固定費</label><input id="monthlyFixed" type="text" inputmode="numeric" data-comma="1" placeholder="円"></div>
+            <div class="field span-3"><label>月間借入返済額</label><input id="monthlyDebt" type="text" inputmode="numeric" data-comma="1" placeholder="円"></div>
+            <div class="field span-3"><label>BAST等 1人当たり自己資本額</label><input id="bastEquityPerEmp" type="text" inputmode="numeric" data-comma="1" placeholder="円"></div>
             <div class="field span-3"><label>目標達成年数</label><input id="targetYears" type="number" min="1" step="1" value="5"></div>
           </div>
           <div class="grid" id="basicMetrics"></div>
@@ -146,10 +146,10 @@
           <div class="row">
             <div class="field span-3"><label>想定する売上停止日数</label><input id="stopDays" type="number" min="0" step="1" value="30"></div>
             <div class="field span-3"><label>売上減少率</label><input id="decreaseRate" type="number" min="0" max="100" step="1" value="100"></div>
-            <div class="field span-3"><label>外注・代替生産費</label><input id="outsourcingCost" type="number" min="0" step="10000" placeholder="円"></div>
-            <div class="field span-3"><label>仮移転・仮設費</label><input id="temporaryCost" type="number" min="0" step="10000" placeholder="円"></div>
-            <div class="field span-3"><label>緊急物流・割増費</label><input id="logisticsCost" type="number" min="0" step="10000" placeholder="円"></div>
-            <div class="field span-3"><label>その他復旧費用</label><input id="recoveryCost" type="number" min="0" step="10000" placeholder="円"></div>
+            <div class="field span-3"><label>外注・代替生産費</label><input id="outsourcingCost" type="text" inputmode="numeric" data-comma="1" placeholder="円"></div>
+            <div class="field span-3"><label>仮移転・仮設費</label><input id="temporaryCost" type="text" inputmode="numeric" data-comma="1" placeholder="円"></div>
+            <div class="field span-3"><label>緊急物流・割増費</label><input id="logisticsCost" type="text" inputmode="numeric" data-comma="1" placeholder="円"></div>
+            <div class="field span-3"><label>その他復旧費用</label><input id="recoveryCost" type="text" inputmode="numeric" data-comma="1" placeholder="円"></div>
             <div class="field span-3"><label>対応方針</label><select id="interruptionResponse"><option value="低減">低減：代替先・復旧手順を準備</option><option value="移転">移転：補償・契約で外部へ移す</option><option value="保有">保有：現預金・自己資本で耐える</option><option value="回避">回避：危険な立地・工程を避ける</option></select></div>
             <div class="field span-3"><label>初動の準備状況</label><select id="recoveryPrepared"><option value="未確認">未確認</option><option value="一部あり">一部あり</option><option value="概ねあり">概ねあり</option></select></div>
             <div class="field span-12"><label>事業停止時に一番困ること</label><textarea id="interruptionMemo" placeholder="例：納期遅延で主要取引先を失う、外注先が未定、仮移転先がない"></textarea></div>
@@ -206,9 +206,9 @@
 <script>
 const yen = v => (isFinite(v) ? Math.round(v).toLocaleString('ja-JP') : '0') + '円';
 const pct = v => isFinite(v) ? (v*100).toFixed(1)+'%' : '0.0%';
-const n = id => Number(document.getElementById(id)?.value || 0);
+const n = id => Number((document.getElementById(id)?.value || '').replace(/,/g, ''));
 const s = id => document.getElementById(id)?.value || '';
-const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.value=val; };
+const set = (id,val)=>{ const el=document.getElementById(id); if(el){ if(el.dataset.comma==='1'&&typeof val==='number'&&isFinite(val)) el.value=val.toLocaleString('ja-JP'); else el.value=val; } };
 const ids = ['clientCode','industry','assessor','date','sales','grossProfit','operatingIncome','cash','equity','totalAssets','employees','businessDays','monthlyFixed','monthlyDebt','bastEquityPerEmp','targetYears','stopDays','decreaseRate','outsourcingCost','temporaryCost','logisticsCost','recoveryCost','interruptionResponse','recoveryPrepared','interruptionMemo','capitalMemo','transferMemo','avoidMemo','retainMemo','reduceMemo'];
 const checks = ['chkOrders','chkCustomers','chkOutsource','chkSupplier','chkTempSite','chkFinance'];
 const strategies = ['低減','移転','保有','回避'];
@@ -219,9 +219,9 @@ function initTables(){
   for(let i=1;i<=5;i++){
     cbody.insertAdjacentHTML('beforeend',`<tr data-row="c${i}">
       <td><input id="c${i}Name" placeholder="例：取引先A"></td>
-      <td><input id="c${i}Sales" type="number" min="0" step="10000"></td>
-      <td><input id="c${i}GP" type="number" min="0" step="10000"></td>
-      <td><input id="c${i}Recv" type="number" min="0" step="10000"></td>
+      <td><input id="c${i}Sales" type="text" inputmode="numeric" data-comma="1"></td>
+      <td><input id="c${i}GP" type="text" inputmode="numeric" data-comma="1"></td>
+      <td><input id="c${i}Recv" type="text" inputmode="numeric" data-comma="1"></td>
       <td><input id="c${i}Replace" type="number" min="0" step="1" placeholder="月"></td>
       <td><select id="c${i}Resp">${strategies.map(x=>`<option value="${x}">${x}</option>`).join('')}</select></td>
       <td id="c${i}Eval" class="mini">未入力</td>
@@ -233,8 +233,8 @@ function initTables(){
     sbody.insertAdjacentHTML('beforeend',`<tr data-row="s${i}">
       <td><input id="sp${i}Name" placeholder="例：仕入先A"></td>
       <td><input id="sp${i}Item" placeholder="材料・商品"></td>
-      <td><input id="sp${i}Purchase" type="number" min="0" step="10000"></td>
-      <td><input id="sp${i}AffectedSales" type="number" min="0" step="10000"></td>
+      <td><input id="sp${i}Purchase" type="text" inputmode="numeric" data-comma="1"></td>
+      <td><input id="sp${i}AffectedSales" type="text" inputmode="numeric" data-comma="1"></td>
       <td><input id="sp${i}Stock" type="number" min="0" step="1" placeholder="日"></td>
       <td><input id="sp${i}AltDays" type="number" min="0" step="1" placeholder="日"></td>
       <td><input id="sp${i}CostInc" type="number" min="0" step="1" placeholder="%"></td>
@@ -406,7 +406,16 @@ function fillSample(){
 function copyPrompt(){ navigator.clipboard.writeText(document.getElementById('aiPrompt').textContent).then(()=>alert('AIメモをコピーしました。')).catch(()=>alert('コピーできませんでした。手動で選択してください。')); }
 function escapeHTML(str){ return String(str||'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m])); }
 
-document.addEventListener('input', e=>calc());
+document.addEventListener('input', e=>{
+  const el=e.target;
+  if(el.dataset.comma==='1'){
+    const neg=el.value.startsWith('-');
+    const abs=el.value.replace(/[^0-9]/g,'');
+    if(abs) el.value=(neg?'-':'')+parseInt(abs,10).toLocaleString('ja-JP');
+    else el.value=neg?'-':'';
+  }
+  calc();
+});
 document.addEventListener('change', e=>calc());
 initTables();
 set('date',new Date().toISOString().slice(0,10));
