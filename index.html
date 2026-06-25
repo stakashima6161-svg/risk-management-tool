@@ -391,16 +391,20 @@ function renderPrompt(d){
 
 function resetAll(){ if(!confirm('入力内容をリセットしますか？')) return; document.querySelectorAll('input,textarea').forEach(el=>{ if(el.type==='checkbox') el.checked=false; else if(el.id==='businessDays') el.value=240; else if(el.id==='targetYears') el.value=5; else if(el.id==='stopDays') el.value=30; else if(el.id==='decreaseRate') el.value=100; else if(el.type==='date') el.value=new Date().toISOString().slice(0,10); else el.value='';}); document.querySelectorAll('select').forEach(el=>el.selectedIndex=0); calc(); }
 function fillSample(){
-  set('clientCode','案件01'); set('industry','製造業'); set('assessor','T'); set('date',new Date().toISOString().slice(0,10));
-  set('sales',180000000); set('grossProfit',63000000); set('operatingIncome',8000000); set('cash',18000000); set('equity',22000000); set('totalAssets',120000000); set('employees',18); set('monthlyFixed',4200000); set('monthlyDebt',900000); set('bastEquityPerEmp',2500000); set('targetYears',5);
-  set('c1Name','主要取引先A'); set('c1Sales',62000000); set('c1GP',22000000); set('c1Recv',13000000); set('c1Replace',6); set('c1Resp','低減');
-  set('c2Name','取引先B'); set('c2Sales',27000000); set('c2GP',7000000); set('c2Recv',4200000); set('c2Replace',3);
-  set('sp1Name','主要仕入先X'); set('sp1Item','専用部材'); set('sp1Purchase',36000000); set('sp1AffectedSales',90000000); set('sp1Stock',10); set('sp1AltDays',40); set('sp1CostInc',12); set('sp1Alt','未確認'); set('sp1Resp','低減');
-  set('stopDays',30); set('decreaseRate',80); set('outsourcingCost',2500000); set('temporaryCost',1200000); set('logisticsCost',600000); set('recoveryCost',800000); set('recoveryPrepared','一部あり');
-  document.getElementById('chkOrders').checked=true; document.getElementById('chkCustomers').checked=true; document.getElementById('chkFinance').checked=true;
-  set('interruptionMemo','工場が止まると納品遅延により主要取引先Aを失う可能性がある。外注先と代替仕入先が未確定。');
-  set('retainMemo','現預金で最低3か月分の固定支出を確保する。BAST等を参考に自己資本目標を設定する。');
-  set('reduceMemo','主要取引先・仕入先の分散、代替外注先、在庫日数、緊急連絡先を確認する。');
+  set('clientCode','SAMPLE-001'); set('industry','製造業'); set('assessor','T.K'); set('date','2026-06-25');
+  set('sales',500000000); set('grossProfit',150000000); set('operatingIncome',30000000); set('cash',80000000); set('equity',120000000); set('totalAssets',350000000); set('employees',45); set('businessDays',250); set('monthlyFixed',8000000); set('monthlyDebt',1500000); set('bastEquityPerEmp',2666000); set('targetYears',5);
+  set('c1Name','取引先A'); set('c1Sales',120000000); set('c1GP',36000000); set('c1Recv',15000000); set('c1Replace',6); set('c1Resp','低減');
+  set('c2Name','取引先B'); set('c2Sales',80000000); set('c2GP',24000000); set('c2Recv',10000000); set('c2Replace',3); set('c2Resp','回避');
+  set('sp1Name','仕入先A'); set('sp1Item','主要原材料'); set('sp1Purchase',60000000); set('sp1AffectedSales',200000000); set('sp1Stock',30); set('sp1AltDays',60); set('sp1CostInc',10); set('sp1Alt','あり'); set('sp1Resp','低減');
+  set('sp2Name','仕入先B'); set('sp2Item','副資材'); set('sp2Purchase',40000000); set('sp2AffectedSales',150000000); set('sp2Stock',15); set('sp2AltDays',45); set('sp2CostInc',15); set('sp2Alt','あり'); set('sp2Resp','低減');
+  set('stopDays',60); set('decreaseRate',80); set('outsourcingCost',5000000); set('temporaryCost',3000000); set('logisticsCost',1000000); set('recoveryCost',2000000); set('interruptionResponse','低減'); set('recoveryPrepared','一部あり');
+  checks.forEach(id=>document.getElementById(id).checked=true);
+  set('interruptionMemo','主要取引先への納品遅延による契約解除');
+  set('capitalMemo','自己資本比率34%。業界平均を上回るが、借入依存度が高い。今後3年で自己資本比率40%を目標とする。');
+  set('transferMemo','火災・賠償保険を見直し、売掛金保険を検討中');
+  set('avoidMemo','売上集中先への依存度を年10%ずつ低減');
+  set('retainMemo','現預金3ヶ月分の固定費相当を維持');
+  set('reduceMemo','BCPマニュアルを今期中に策定予定');
   calc();
 }
 function copyPrompt(){ navigator.clipboard.writeText(document.getElementById('aiPrompt').textContent).then(()=>alert('AIメモをコピーしました。')).catch(()=>alert('コピーできませんでした。手動で選択してください。')); }
