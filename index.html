@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
@@ -47,12 +47,8 @@
       <h1>TKC財務リスマネ・アセスメント入門ツール</h1>
       <p class="lead">巡回監査担当者が、匿名化した財務数字を起点に「何が起きると困るか」「起きたらどれくらい影響があるか」「どう備えるか」をヒアリングするための入口ツールです。関与先名・正式取引先名・住所・個人名は入力しない運用を前提にしています。</p>
       <div class="toolbar no-print">
-        <button onclick="saveLocal()">保存</button>
-        <button class="secondary" onclick="loadLocal()">保存データ読込</button>
-        <button class="secondary" onclick="fillSample()">サンプル入力</button>
-        <button class="secondary" onclick="downloadJSON()">JSON保存</button>
-        <label class="filebtn secondary">JSON読込<input type="file" id="jsonFile" accept="application/json" style="display:none"></label>
-        <button class="secondary" onclick="downloadCSV()">CSV出力</button>
+        <button onclick="document.getElementById('basic').scrollIntoView({behavior:'smooth'})">入力</button>
+        <button class="secondary" onclick="fillSample()">サンプル確認</button>
         <button class="secondary" onclick="window.print()">A4印刷</button>
         <button class="secondary danger" onclick="resetAll()">リセット</button>
       </div>
@@ -393,32 +389,6 @@ function renderPrompt(d){
   document.getElementById('aiPrompt').textContent = prompt;
 }
 
-function getData(){
-  const data={values:{},checks:{}};
-  ids.forEach(id=>data.values[id]=s(id));
-  for(let i=1;i<=5;i++) ['Name','Sales','GP','Recv','Replace','Resp'].forEach(k=>data.values[`c${i}${k}`]=s(`c${i}${k}`));
-  for(let i=1;i<=3;i++) ['Name','Item','Purchase','AffectedSales','Stock','AltDays','CostInc','Alt','Resp'].forEach(k=>data.values[`sp${i}${k}`]=s(`sp${i}${k}`));
-  checks.forEach(id=>data.checks[id]=document.getElementById(id).checked);
-  return data;
-}
-function setData(data){
-  if(!data || !data.values) return;
-  Object.entries(data.values).forEach(([id,val])=>{const el=document.getElementById(id); if(el) el.value=val;});
-  if(data.checks) Object.entries(data.checks).forEach(([id,val])=>{const el=document.getElementById(id); if(el) el.checked=!!val;});
-  calc();
-}
-function saveLocal(){ localStorage.setItem('tkcRismaneAssessmentIntro', JSON.stringify(getData())); alert('この端末のブラウザに保存しました。'); }
-function loadLocal(){ const raw=localStorage.getItem('tkcRismaneAssessmentIntro'); if(!raw) return alert('保存データがありません。'); setData(JSON.parse(raw)); }
-function downloadJSON(){ const blob=new Blob([JSON.stringify(getData(),null,2)],{type:'application/json'}); downloadBlob(blob,`tkc_rismane_${dateStamp()}.json`); }
-function downloadCSV(){
-  const d=getData(); const rows=[['項目','値']];
-  Object.entries(d.values).forEach(([k,v])=>rows.push([k,v]));
-  Object.entries(d.checks).forEach(([k,v])=>rows.push([k,v?'TRUE':'FALSE']));
-  const csv=rows.map(r=>r.map(x=>`"${String(x).replaceAll('"','""')}"`).join(',')).join('\n');
-  downloadBlob(new Blob(['\ufeff'+csv],{type:'text/csv'}),`tkc_rismane_${dateStamp()}.csv`);
-}
-function downloadBlob(blob,filename){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click(); URL.revokeObjectURL(a.href); }
-function dateStamp(){ return new Date().toISOString().slice(0,10).replaceAll('-',''); }
 function resetAll(){ if(!confirm('入力内容をリセットしますか？')) return; document.querySelectorAll('input,textarea').forEach(el=>{ if(el.type==='checkbox') el.checked=false; else if(el.id==='businessDays') el.value=240; else if(el.id==='targetYears') el.value=5; else if(el.id==='stopDays') el.value=30; else if(el.id==='decreaseRate') el.value=100; else if(el.type==='date') el.value=new Date().toISOString().slice(0,10); else el.value='';}); document.querySelectorAll('select').forEach(el=>el.selectedIndex=0); calc(); }
 function fillSample(){
   set('clientCode','案件01'); set('industry','製造業'); set('assessor','T'); set('date',new Date().toISOString().slice(0,10));
@@ -438,9 +408,6 @@ function escapeHTML(str){ return String(str||'').replace(/[&<>'"]/g,m=>({'&':'&a
 
 document.addEventListener('input', e=>calc());
 document.addEventListener('change', e=>calc());
-document.getElementById('jsonFile').addEventListener('change', e=>{
-  const file=e.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>{ try{ setData(JSON.parse(reader.result)); } catch(err){ alert('JSONを読み込めませんでした。'); } }; reader.readAsText(file); e.target.value='';
-});
 initTables();
 set('date',new Date().toISOString().slice(0,10));
 calc();
