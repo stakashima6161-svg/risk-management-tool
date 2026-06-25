@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TKC財務リスマネ・アセスメント入門ツール</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;--card:#ffffff;--ink:#1f2937;--muted:#6b7280;--line:#d9dee8;
+      --brand:#155e75;--brand2:#0f766e;--pale:#ecfeff;--red:#b91c1c;--yellow:#a16207;--blue:#0369a1;--green:#047857;--gray:#64748b;
+      --redbg:#fef2f2;--yellowbg:#fffbeb;--bluebg:#eff6ff;--greenbg:#ecfdf5;--graybg:#f8fafc;
+      --shadow:0 8px 24px rgba(15,23,42,.08);--radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",Meiryo,sans-serif;line-height:1.65}
+    header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:28px 18px 34px}
+    .wrap{max-width:1180px;margin:0 auto}
+    h1{margin:0 0 8px;font-size:clamp(24px,4vw,38px);letter-spacing:.02em}
+    h2{font-size:22px;margin:0 0 14px;border-left:6px solid var(--brand2);padding-left:10px}
+    h3{font-size:18px;margin:18px 0 10px}
+    p{margin:0 0 10px}.lead{font-size:16px;opacity:.96;max-width:980px}.note{font-size:13px;color:var(--muted)}
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    button,.btn,label.filebtn{appearance:none;border:0;border-radius:999px;padding:10px 15px;font-weight:700;cursor:pointer;background:var(--brand);color:#fff;box-shadow:0 4px 12px rgba(15,23,42,.12);font-size:14px;display:inline-flex;align-items:center;gap:6px}
+    button.secondary,.btn.secondary,label.filebtn.secondary{background:#fff;color:var(--brand);border:1px solid rgba(255,255,255,.7)}
+    button.ghost{background:#eef2f7;color:#334155;box-shadow:none}.danger{background:#991b1b}
+    main{padding:22px 18px 60px}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}.card.soft{box-shadow:none;background:#fbfdff}.col-12{grid-column:span 12}.col-8{grid-column:span 8}.col-6{grid-column:span 6}.col-4{grid-column:span 4}.col-3{grid-column:span 3}
+    @media(max-width:860px){.col-8,.col-6,.col-4,.col-3{grid-column:span 12}.toolbar{gap:8px}button,.btn,label.filebtn{width:100%;justify-content:center}}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:-36px;margin-bottom:18px}.step{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:var(--shadow)}.step strong{display:block;color:var(--brand);font-size:15px}.step span{font-size:12px;color:var(--muted)}
+    @media(max-width:860px){.steps{grid-template-columns:1fr;margin-top:0}}
+    .nav{display:flex;gap:8px;overflow:auto;padding:8px 0 16px;position:sticky;top:0;background:rgba(246,247,251,.92);backdrop-filter:blur(8px);z-index:5}.nav a{white-space:nowrap;text-decoration:none;color:#334155;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 12px;font-weight:700;font-size:13px}.nav a:hover{background:var(--pale);border-color:#99f6e4}
+    label{display:block;font-size:13px;font-weight:700;color:#334155;margin-bottom:5px}.field{margin-bottom:12px}input,select,textarea{width:100%;padding:10px 11px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;background:#fff;color:var(--ink)}textarea{min-height:74px;resize:vertical}.row{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}.span-2{grid-column:span 2}.span-3{grid-column:span 3}.span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-8{grid-column:span 8}.span-12{grid-column:span 12}
+    @media(max-width:860px){.span-2,.span-3,.span-4,.span-5,.span-6,.span-8{grid-column:span 12}}
+    .metric{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}.metric .label{font-size:12px;color:var(--muted);font-weight:700}.metric .value{font-size:23px;font-weight:900;margin-top:2px}.metric small{color:var(--muted);font-size:12px}.bad{background:var(--redbg);border-color:#fecaca}.warn{background:var(--yellowbg);border-color:#fde68a}.good{background:var(--greenbg);border-color:#bbf7d0}.info{background:var(--bluebg);border-color:#bfdbfe}.mutedbox{background:var(--graybg);border-color:#e2e8f0}
+    .badge{display:inline-flex;align-items:center;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:900;margin-right:6px}.b-red{background:var(--redbg);color:var(--red);border:1px solid #fecaca}.b-yellow{background:var(--yellowbg);color:var(--yellow);border:1px solid #fde68a}.b-blue{background:var(--bluebg);color:var(--blue);border:1px solid #bfdbfe}.b-green{background:var(--greenbg);color:var(--green);border:1px solid #bbf7d0}.b-gray{background:var(--graybg);color:var(--gray);border:1px solid #e2e8f0}
+    table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}th,td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}th{background:#f1f5f9;font-size:12px;color:#334155}tr:last-child td{border-bottom:0}td input,td select{min-width:110px}.tablewrap{overflow:auto;border-radius:14px}
+    .mini{font-size:12px;color:var(--muted)}.calcLine{font-size:13px;margin-top:6px}.assessment{display:grid;grid-template-columns:1fr 1fr 1fr 1.3fr;gap:10px}.assessBox{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}.assessBox strong{display:block;color:var(--brand);margin-bottom:4px}.assessBox p{font-size:13px;color:#475569;margin:0}
+    @media(max-width:860px){.assessment{grid-template-columns:1fr}}
+    .checks{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.checkitem{display:flex;gap:8px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px}.checkitem input{width:auto;margin-top:5px}.checkitem label{margin:0;font-weight:600;color:#334155}
+    @media(max-width:860px){.checks{grid-template-columns:1fr}}
+    .report{background:#fff;color:#111827;border:1px solid #cbd5e1;border-radius:12px;padding:22px}.report h2{border:0;padding:0;margin-bottom:4px}.report table{box-shadow:none}.report .report-title{display:flex;justify-content:space-between;gap:12px;border-bottom:2px solid #111827;padding-bottom:10px;margin-bottom:14px}.report .report-title small{color:#475569}.kpiLine{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}.kpiLine .metric{box-shadow:none;padding:10px}.copybox{white-space:pre-wrap;background:#0f172a;color:#e2e8f0;border-radius:14px;padding:14px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;max-height:360px;overflow:auto}.hidden{display:none!important}
+    @media print{header,.nav,.toolbar,.no-print,.steps,#aiSection,#inputSections{display:none!important}body{background:#fff}main{padding:0}.wrap{max-width:100%}.card{box-shadow:none;border:0;padding:0}.report{border:0;border-radius:0}.col-12{grid-column:span 12}@page{size:A4;margin:12mm}.report{font-size:12px}.report h2{font-size:18px}.kpiLine{grid-template-columns:repeat(4,1fr)} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>TKC財務リスマネ・アセスメント入門ツール</h1>
+      <p class="lead">巡回監査担当者が、匿名化した財務数字を起点に「何が起きると困るか」「起きたらどれくらい影響があるか」「どう備えるか」をヒアリングするための入口ツールです。関与先名・正式取引先名・住所・個人名は入力しない運用を前提にしています。</p>
+      <div class="toolbar no-print">
+        <button onclick="saveLocal()">保存</button>
+        <button class="secondary" onclick="loadLocal()">保存データ読込</button>
+        <button class="secondary" onclick="fillSample()">サンプル入力</button>
+        <button class="secondary" onclick="downloadJSON()">JSON保存</button>
+        <label class="filebtn secondary">JSON読込<input type="file" id="jsonFile" accept="application/json" style="display:none"></label>
+        <button class="secondary" onclick="downloadCSV()">CSV出力</button>
+        <button class="secondary" onclick="window.print()">A4印刷</button>
+        <button class="secondary danger" onclick="resetAll()">リセット</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="steps no-print">
+        <div class="step"><strong>1 リスクの特定</strong><span>何が起きると困るかを選ぶ</span></div>
+        <div class="step"><strong>2 リスクの分析</strong><span>売上・粗利益・資金への影響を見る</span></div>
+        <div class="step"><strong>3 リスクの評価</strong><span>赤・黄・青で優先順位をつける</span></div>
+        <div class="step"><strong>4 リスク対応</strong><span>移転・回避・保有・低減を考える</span></div>
+      </div>
+
+      <nav class="nav no-print">
+        <a href="#basic">基本数字</a><a href="#customer">取引先</a><a href="#supplier">仕入先</a><a href="#interruption">事業停止</a><a href="#capital">自己資本</a><a href="#response">対応方針</a><a href="#reportCard">レポート</a><a href="#aiSection">AIメモ</a>
+      </nav>
+
+      <section class="grid" id="inputSections">
+        <div class="card col-12 soft">
+          <h2>匿名化・守秘義務対応の考え方</h2>
+          <p>このツールは、関与先名、正式な取引先名、住所、代表者名、担当者名、証券番号などを入力しない前提です。入力するのは、業種、概算の財務数字、取引先A・仕入先Bのような記号、リスク対応メモに限定します。</p>
+          <div class="assessment">
+            <div class="assessBox"><strong>入れない</strong><p>会社名、個人名、住所、電話番号、メール、取引先の正式名称、証券番号。</p></div>
+            <div class="assessBox"><strong>入れてよい</strong><p>業種、概算金額、取引先Aなどの記号、在庫日数、停止日数、対応方針。</p></div>
+            <div class="assessBox"><strong>AI利用時</strong><p>AIメモにも固有名詞は出さず、必要に応じて金額は百万円単位などに丸めます。</p></div>
+            <div class="assessBox"><strong>保存時</strong><p>GitHub Pages単体では外部送信しません。保存機能は利用端末のブラウザ保存です。</p></div>
+          </div>
+        </div>
+
+        <div class="card col-12 soft">
+          <h2>このツールの使い方</h2>
+          <p>保険証券の回収や補償内容の判断を目的にしたものではありません。巡回監査の場で、匿名化した財務数字を見ながら「未確認のリスク」に気づいてもらうためのヒアリング支援です。関与先名・正式な取引先名・住所・個人名は入力しない設計です。</p>
+          <div class="assessment">
+            <div class="assessBox"><strong>特定</strong><p>主要取引先、仕入先、事業停止、設備停止、自己資本不足など、困ることを選びます。</p></div>
+            <div class="assessBox"><strong>分析</strong><p>売上ではなく、粗利益・営業利益・現預金への影響をざっくり確認します。</p></div>
+            <div class="assessBox"><strong>評価</strong><p>赤：早急に確認、黄：次回までに確認、青：現時点では整理済み。</p></div>
+            <div class="assessBox"><strong>対応</strong><p>移転、回避、保有、低減のどれで備えるかを一緒に考えます。</p></div>
+          </div>
+        </div>
+
+        <div class="card col-12" id="basic">
+          <h2>1. 基本数字</h2>
+          <div class="row">
+            <div class="field span-3"><label>匿名管理ID（任意）</label><input id="clientCode" placeholder="例：案件01、A社ではなく記号"></div>
+            <div class="field span-3"><label>業種</label><input id="industry" placeholder="例：製造業"></div>
+            <div class="field span-3"><label>担当者イニシャル（任意）</label><input id="assessor" placeholder="例：T、担当者名は入れない"></div>
+            <div class="field span-3"><label>確認日</label><input id="date" type="date"></div>
+            <div class="field span-3"><label>年間売上高</label><input id="sales" type="number" min="0" step="10000" placeholder="円"></div>
+            <div class="field span-3"><label>年間粗利益</label><input id="grossProfit" type="number" min="0" step="10000" placeholder="円"></div>
+            <div class="field span-3"><label>営業利益</label><input id="operatingIncome" type="number" step="10000" placeholder="円"></div>
+            <div class="field span-3"><label>現預金</label><input id="cash" type="number" min="0" step="10000" placeholder="円"></div>
+            <div class="field span-3"><label>自己資本額</label><input id="equity" type="number" step="10000" placeholder="円"></div>
+            <div class="field span-3"><label>総資産（任意）</label><input id="totalAssets" type="number" min="0" step="10000" placeholder="円"></div>
+            <div class="field span-3"><label>従業員数</label><input id="employees" type="number" min="0" step="1" placeholder="人"></div>
+            <div class="field span-3"><label>年間営業日数</label><input id="businessDays" type="number" min="1" step="1" value="240"></div>
+            <div class="field span-3"><label>月間固定費</label><input id="monthlyFixed" type="number" min="0" step="10000" placeholder="円"></div>
+            <div class="field span-3"><label>月間借入返済額</label><input id="monthlyDebt" type="number" min="0" step="10000" placeholder="円"></div>
+            <div class="field span-3"><label>BAST等 1人当たり自己資本額</label><input id="bastEquityPerEmp" type="number" min="0" step="10000" placeholder="円"></div>
+            <div class="field span-3"><label>目標達成年数</label><input id="targetYears" type="number" min="1" step="1" value="5"></div>
+          </div>
+          <div class="grid" id="basicMetrics"></div>
+        </div>
+
+        <div class="card col-12" id="customer">
+          <h2>2. 主要取引先停止リスク</h2>
+          <p class="note">見るポイント：主要取引先の売上ではなく、粗利益がなくなったときに営業利益が赤字になるか。売掛金が回収不能になったとき、自己資本を大きく傷めないか。</p>
+          <div class="tablewrap">
+            <table id="customerTable">
+              <thead><tr><th>取引先記号</th><th>年間売上</th><th>年間粗利益</th><th>売掛金</th><th>代替まで</th><th>対応方針</th><th>自動評価</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <h3>ヒアリングの聞き方</h3>
+          <p class="note">「この取引先との取引が止まった場合、何か月以内に代替売上を確保できそうですか。売上ではなく粗利益への影響で見てみましょう。」</p>
+        </div>
+
+        <div class="card col-12" id="supplier">
+          <h2>3. 主要仕入先停止リスク</h2>
+          <p class="note">見るポイント：主要仕入先が止まったとき、在庫で何日持つか、代替仕入先へ何日で切り替えられるか、原価上昇で粗利益がどれくらい減るか。</p>
+          <div class="tablewrap">
+            <table id="supplierTable">
+              <thead><tr><th>仕入先記号</th><th>対象商品・材料</th><th>年間仕入額</th><th>影響売上</th><th>在庫日数</th><th>代替調達</th><th>原価増</th><th>代替先</th><th>対応方針</th><th>自動評価</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <h3>ヒアリングの聞き方</h3>
+          <p class="note">「売上先だけでなく、仕入先が止まっても事業は止まります。この材料が入らない場合、在庫で何日持つか、代替先があるかを確認しておきましょう。」</p>
+        </div>
+
+        <div class="card col-12" id="interruption">
+          <h2>4. 事業停止・収益途絶リスク</h2>
+          <p class="note">災害時に最初に考えるべきことは、壊れた建物や機械の修理だけではありません。今ある注文をどう納品し、取引先を失わないかです。</p>
+          <div class="row">
+            <div class="field span-3"><label>想定する売上停止日数</label><input id="stopDays" type="number" min="0" step="1" value="30"></div>
+            <div class="field span-3"><label>売上減少率</label><input id="decreaseRate" type="number" min="0" max="100" step="1" value="100"></div>
+            <div class="field span-3"><label>外注・代替生産費</label><input id="outsourcingCost" type="number" min="0" step="10000" placeholder="円"></div>
+            <div class="field span-3"><label>仮移転・仮設費</label><input id="temporaryCost" type="number" min="0" step="10000" placeholder="円"></div>
+            <div class="field span-3"><label>緊急物流・割増費</label><input id="logisticsCost" type="number" min="0" step="10000" placeholder="円"></div>
+            <div class="field span-3"><label>その他復旧費用</label><input id="recoveryCost" type="number" min="0" step="10000" placeholder="円"></div>
+            <div class="field span-3"><label>対応方針</label><select id="interruptionResponse"><option value="低減">低減：代替先・復旧手順を準備</option><option value="移転">移転：補償・契約で外部へ移す</option><option value="保有">保有：現預金・自己資本で耐える</option><option value="回避">回避：危険な立地・工程を避ける</option></select></div>
+            <div class="field span-3"><label>初動の準備状況</label><select id="recoveryPrepared"><option value="未確認">未確認</option><option value="一部あり">一部あり</option><option value="概ねあり">概ねあり</option></select></div>
+            <div class="field span-12"><label>事業停止時に一番困ること</label><textarea id="interruptionMemo" placeholder="例：納期遅延で主要取引先を失う、外注先が未定、仮移転先がない"></textarea></div>
+          </div>
+          <div class="grid" id="interruptionMetrics"></div>
+          <h3>初動確認チェック</h3>
+          <div class="checks">
+            <div class="checkitem"><input type="checkbox" id="chkOrders"><label for="chkOrders">受注残・納期をすぐ確認できる</label></div>
+            <div class="checkitem"><input type="checkbox" id="chkCustomers"><label for="chkCustomers">主要取引先への緊急連絡先がある</label></div>
+            <div class="checkitem"><input type="checkbox" id="chkOutsource"><label for="chkOutsource">代替生産・外注先の候補がある</label></div>
+            <div class="checkitem"><input type="checkbox" id="chkSupplier"><label for="chkSupplier">代替仕入先の候補がある</label></div>
+            <div class="checkitem"><input type="checkbox" id="chkTempSite"><label for="chkTempSite">仮移転・仮設事務所の候補がある</label></div>
+            <div class="checkitem"><input type="checkbox" id="chkFinance"><label for="chkFinance">緊急資金枠・現預金の確認がある</label></div>
+          </div>
+        </div>
+
+        <div class="card col-12" id="capital">
+          <h2>5. 自己資本・現預金リスク</h2>
+          <p class="note">BAST等の1人当たり自己資本額を入力し、会社規模に応じた目標自己資本額を確認します。小さな損害や一時的な売上減少は、保険だけでなく自己資本と現預金で保有できる体質づくりが重要です。</p>
+          <div class="grid" id="capitalMetrics"></div>
+          <div class="row">
+            <div class="field span-12"><label>自己資本についての面談メモ</label><textarea id="capitalMemo" placeholder="例：5年で目標自己資本に近づけるため、毎年の内部留保目標を決めたい"></textarea></div>
+          </div>
+        </div>
+
+        <div class="card col-12" id="response">
+          <h2>6. リスク対応の整理</h2>
+          <p class="note">対応は1つに限りません。入口資料では「どれが考えられるか」を一緒に確認するだけで十分です。</p>
+          <div class="grid">
+            <div class="card soft col-3"><h3>移転</h3><p>保険、契約、保証、外注などでリスクを外部へ移す。</p><textarea id="transferMemo" placeholder="例：取引信用保険、休業補償、外注契約の確認"></textarea></div>
+            <div class="card soft col-3"><h3>回避</h3><p>危険な取引・立地・工程・与信を避ける、縮小する。</p><textarea id="avoidMemo" placeholder="例：与信不安先の取引上限、単独依存を避ける"></textarea></div>
+            <div class="card soft col-3"><h3>保有</h3><p>自己資本、現預金、緊急資金枠で自社が受け止める。</p><textarea id="retainMemo" placeholder="例：現預金3か月分、自己資本目標の設定"></textarea></div>
+            <div class="card soft col-3"><h3>低減</h3><p>発生可能性や影響額を小さくする。</p><textarea id="reduceMemo" placeholder="例：取引先分散、仕入先分散、BCP、代替先確保"></textarea></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="card col-12" id="reportCard">
+          <h2 class="no-print">A4 簡易レポート</h2>
+          <div class="report" id="report"></div>
+        </div>
+
+        <div class="card col-12 no-print" id="aiSection">
+          <h2>AI投入用メモ</h2>
+          <p class="note">下のメモをコピーしてChatGPT等に貼り付けると、面談トークや次回宿題を整えることができます。GitHub Pages単体ではAI APIには接続していません。社外AI等へ貼り付ける場合は、関与先名・正式取引先名・住所・個人名を含めず、各事務所の情報管理ルールに従ってください。</p>
+          <div class="toolbar"><button onclick="copyPrompt()">AIメモをコピー</button></div>
+          <div class="copybox" id="aiPrompt"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+<script>
+const yen = v => (isFinite(v) ? Math.round(v).toLocaleString('ja-JP') : '0') + '円';
+const pct = v => isFinite(v) ? (v*100).toFixed(1)+'%' : '0.0%';
+const n = id => Number(document.getElementById(id)?.value || 0);
+const s = id => document.getElementById(id)?.value || '';
+const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.value=val; };
+const ids = ['clientCode','industry','assessor','date','sales','grossProfit','operatingIncome','cash','equity','totalAssets','employees','businessDays','monthlyFixed','monthlyDebt','bastEquityPerEmp','targetYears','stopDays','decreaseRate','outsourcingCost','temporaryCost','logisticsCost','recoveryCost','interruptionResponse','recoveryPrepared','interruptionMemo','capitalMemo','transferMemo','avoidMemo','retainMemo','reduceMemo'];
+const checks = ['chkOrders','chkCustomers','chkOutsource','chkSupplier','chkTempSite','chkFinance'];
+const strategies = ['低減','移転','保有','回避'];
+
+function initTables(){
+  const cbody = document.querySelector('#customerTable tbody');
+  cbody.innerHTML='';
+  for(let i=1;i<=5;i++){
+    cbody.insertAdjacentHTML('beforeend',`<tr data-row="c${i}">
+      <td><input id="c${i}Name" placeholder="例：取引先A"></td>
+      <td><input id="c${i}Sales" type="number" min="0" step="10000"></td>
+      <td><input id="c${i}GP" type="number" min="0" step="10000"></td>
+      <td><input id="c${i}Recv" type="number" min="0" step="10000"></td>
+      <td><input id="c${i}Replace" type="number" min="0" step="1" placeholder="月"></td>
+      <td><select id="c${i}Resp">${strategies.map(x=>`<option value="${x}">${x}</option>`).join('')}</select></td>
+      <td id="c${i}Eval" class="mini">未入力</td>
+    </tr>`);
+  }
+  const sbody = document.querySelector('#supplierTable tbody');
+  sbody.innerHTML='';
+  for(let i=1;i<=3;i++){
+    sbody.insertAdjacentHTML('beforeend',`<tr data-row="s${i}">
+      <td><input id="sp${i}Name" placeholder="例：仕入先A"></td>
+      <td><input id="sp${i}Item" placeholder="材料・商品"></td>
+      <td><input id="sp${i}Purchase" type="number" min="0" step="10000"></td>
+      <td><input id="sp${i}AffectedSales" type="number" min="0" step="10000"></td>
+      <td><input id="sp${i}Stock" type="number" min="0" step="1" placeholder="日"></td>
+      <td><input id="sp${i}AltDays" type="number" min="0" step="1" placeholder="日"></td>
+      <td><input id="sp${i}CostInc" type="number" min="0" step="1" placeholder="%"></td>
+      <td><select id="sp${i}Alt"><option value="未確認">未確認</option><option value="あり">あり</option><option value="なし">なし</option></select></td>
+      <td><select id="sp${i}Resp">${strategies.map(x=>`<option value="${x}">${x}</option>`).join('')}</select></td>
+      <td id="sp${i}Eval" class="mini">未入力</td>
+    </tr>`);
+  }
+}
+
+function calc(){
+  const sales=n('sales'), gp=n('grossProfit'), op=n('operatingIncome'), cash=n('cash'), equity=n('equity'), totalAssets=n('totalAssets'), emp=n('employees'), days=n('businessDays')||240, monthlyFixed=n('monthlyFixed'), monthlyDebt=n('monthlyDebt'), bast=n('bastEquityPerEmp'), years=n('targetYears')||5;
+  const gm = sales ? gp/sales : 0;
+  const monthlyOut = monthlyFixed + monthlyDebt;
+  const endurance = monthlyOut ? cash/monthlyOut : 0;
+  const equityPerEmp = emp ? equity/emp : 0;
+  const targetEquity = emp*bast;
+  const equityGap = Math.max(0,targetEquity-equity);
+  const reservePerYear = equityGap/years;
+  const equityRatio = totalAssets ? equity/totalAssets : 0;
+  const gpMarginOfSafety = gp ? op/gp : 0;
+  const dailyGP = gp/days;
+
+  const capitalLevel = (endurance<1 || (targetEquity>0 && equity < targetEquity*0.5)) ? 'red' : (endurance<3 || equityGap>0 ? 'yellow' : 'green');
+  const basicMetrics = document.getElementById('basicMetrics');
+  basicMetrics.innerHTML = metric('粗利益率', pct(gm), '売上が減った時は粗利益への影響で見る', 'info')+
+    metric('粗利益の余裕', pct(gpMarginOfSafety), '営業利益 ÷ 粗利益。主要取引先の粗利益喪失と比較', gpMarginOfSafety<.05?'bad':gpMarginOfSafety<.15?'warn':'good')+
+    metric('月間固定支出', yen(monthlyOut), '月間固定費 + 月間返済額', 'mutedbox')+
+    metric('無収入耐久月数', endurance.toFixed(1)+'か月', '現預金 ÷ 月間固定支出', endurance<1?'bad':endurance<3?'warn':'good');
+
+  const capitalMetrics = document.getElementById('capitalMetrics');
+  capitalMetrics.innerHTML = metric('現在の1人当たり自己資本', yen(equityPerEmp), '自己資本額 ÷ 従業員数', 'info')+
+    metric('目標自己資本額', yen(targetEquity), 'BAST等1人当たり自己資本 × 従業員数', 'info')+
+    metric('自己資本不足額', yen(equityGap), '目標との差額', equityGap>0?'warn':'good')+
+    metric('必要な年間内部留保', yen(reservePerYear), years+'年で目標到達する場合', equityGap>0?'warn':'good')+
+    metric('自己資本比率', totalAssets? pct(equityRatio):'未入力', '自己資本額 ÷ 総資産', totalAssets?(equityRatio<.1?'bad':equityRatio<.3?'warn':'good'):'mutedbox')+
+    metric('無収入耐久月数', endurance.toFixed(1)+'か月', '小さな損害を保有できる体力', endurance<1?'bad':endurance<3?'warn':'good');
+
+  const customerResults=[];
+  for(let i=1;i<=5;i++){
+    const name=s(`c${i}Name`), cs=n(`c${i}Sales`), cgp=n(`c${i}GP`), recv=n(`c${i}Recv`), rep=n(`c${i}Replace`), resp=s(`c${i}Resp`);
+    if(!name && !cs && !cgp && !recv){ document.getElementById(`c${i}Eval`).innerHTML='未入力'; continue; }
+    const salesDep = sales? cs/sales:0, gpDep = gp? cgp/gp:0, postOp = op-cgp, recvEq = equity? recv/equity:0;
+    let level='blue', label='青', reason='影響は限定的';
+    if(postOp<0 || gpDep>=.4 || recvEq>=.5){level='red';label='赤';reason='粗利益喪失または売掛金集中の影響が大きい';}
+    else if(cgp>op*.5 || gpDep>=.2 || recvEq>=.3){level='yellow';label='黄';reason='利益・資金への影響を確認したい';}
+    const html = `${badge(level,label)}<div>売上依存 ${pct(salesDep)}／粗利依存 ${pct(gpDep)}</div><div>停止後営業利益 ${yen(postOp)}</div><div>売掛金÷自己資本 ${equity?pct(recvEq):'未入力'}</div>`;
+    document.getElementById(`c${i}Eval`).innerHTML=html;
+    customerResults.push({name:name||`取引先${i}`, cs,cgp,recv,rep,resp,level,label,reason,salesDep,gpDep,postOp,recvEq});
+  }
+
+  const supplierResults=[];
+  for(let i=1;i<=3;i++){
+    const name=s(`sp${i}Name`), item=s(`sp${i}Item`), purchase=n(`sp${i}Purchase`), affected=n(`sp${i}AffectedSales`), stock=n(`sp${i}Stock`), altDays=n(`sp${i}AltDays`), costInc=n(`sp${i}CostInc`), alt=s(`sp${i}Alt`), resp=s(`sp${i}Resp`);
+    if(!name && !item && !purchase && !affected){ document.getElementById(`sp${i}Eval`).innerHTML='未入力'; continue; }
+    const shortageDays = Math.max(0, altDays-stock);
+    const affectedDailyGP = (affected*gm)/days;
+    const gpLoss = affectedDailyGP*shortageDays;
+    const extraCost = (purchase/days)*Math.max(altDays,stock,0)*(costInc/100);
+    const totalImpact = gpLoss+extraCost;
+    let level='blue', label='青';
+    if((alt==='なし' && stock<14) || totalImpact>op || shortageDays>=30){level='red';label='赤';}
+    else if(alt==='未確認' || stock<30 || totalImpact>op*.5 || shortageDays>=10){level='yellow';label='黄';}
+    document.getElementById(`sp${i}Eval`).innerHTML = `${badge(level,label)}<div>不足見込 ${shortageDays}日</div><div>粗利喪失 ${yen(gpLoss)}</div><div>追加費用 ${yen(extraCost)}</div>`;
+    supplierResults.push({name:name||`仕入先${i}`,item,purchase,affected,stock,altDays,costInc,alt,resp,level,label,shortageDays,gpLoss,extraCost,totalImpact});
+  }
+
+  const stopDays=n('stopDays'), decrease=n('decreaseRate')/100, outsourcing=n('outsourcingCost'), temp=n('temporaryCost'), logistics=n('logisticsCost'), recovery=n('recoveryCost');
+  const gpLoss = dailyGP*stopDays*decrease;
+  const extra = outsourcing+temp+logistics+recovery;
+  const fixedCashNeed = monthlyOut/30*stopDays;
+  const postStopOp = op-gpLoss-extra;
+  const cashGap = Math.max(0, fixedCashNeed+extra-cash);
+  const checkedCount = checks.filter(id=>document.getElementById(id).checked).length;
+  let interLevel = 'blue', interLabel='青';
+  if(postStopOp<0 || cashGap>0 || (stopDays>=30 && endurance<3) || checkedCount<=2){interLevel='red';interLabel='赤';}
+  else if(postStopOp<op*.5 || stopDays>=10 || checkedCount<=4){interLevel='yellow';interLabel='黄';}
+  document.getElementById('interruptionMetrics').innerHTML = metric('粗利益喪失額', yen(gpLoss), `${stopDays}日・売上減少率${Math.round(decrease*100)}%で試算`, gpLoss>op?'bad':gpLoss>op*.5?'warn':'info')+
+    metric('追加費用', yen(extra), '外注・仮移転・物流・復旧費', extra>0?'warn':'mutedbox')+
+    metric('停止後営業利益', yen(postStopOp), '現在の営業利益 − 粗利喪失 − 追加費用', postStopOp<0?'bad':postStopOp<op*.5?'warn':'good')+
+    metric('資金不足見込', yen(cashGap), '停止期間の固定支出＋追加費用 − 現預金', cashGap>0?'bad':'good')+
+    metric('初動準備', `${checkedCount}/6`, '受注・連絡・代替先・資金確認', checkedCount<=2?'bad':checkedCount<=4?'warn':'good')+
+    metric('事業停止評価', badge(interLevel,interLabel), '収益途絶と初動準備の総合判定', interLevel==='red'?'bad':interLevel==='yellow'?'warn':'good');
+
+  const allRisks = [];
+  customerResults.forEach(r=>allRisks.push({type:'取引先停止',name:r.name,level:r.level,label:r.label,impact:Math.max(r.cgp,r.recv),text:`${r.name}の取引停止。停止後営業利益 ${yen(r.postOp)}、粗利依存 ${pct(r.gpDep)}。対応方針：${r.resp}`}));
+  supplierResults.forEach(r=>allRisks.push({type:'仕入先停止',name:r.name,level:r.level,label:r.label,impact:r.totalImpact,text:`${r.name}の仕入停止。不足見込 ${r.shortageDays}日、影響額 ${yen(r.totalImpact)}。対応方針：${r.resp}`}));
+  allRisks.push({type:'事業停止',name:'売上・粗利益途絶',level:interLevel,label:interLabel,impact:gpLoss+extra+cashGap,text:`${stopDays}日停止で粗利益喪失 ${yen(gpLoss)}、停止後営業利益 ${yen(postStopOp)}。対応方針：${s('interruptionResponse')}`});
+  allRisks.push({type:'自己資本',name:'自己資本・現預金',level:capitalLevel,label:capitalLevel==='red'?'赤':capitalLevel==='yellow'?'黄':'青',impact:equityGap,text:`目標自己資本 ${yen(targetEquity)}、不足額 ${yen(equityGap)}、無収入耐久 ${endurance.toFixed(1)}か月。`});
+  const levelOrder={red:3,yellow:2,blue:1,green:0};
+  allRisks.sort((a,b)=>(levelOrder[b.level]||0)-(levelOrder[a.level]||0) || b.impact-a.impact);
+
+  renderReport({sales,gp,op,cash,equity,totalAssets,emp,days,gm,monthlyOut,endurance,equityPerEmp,targetEquity,equityGap,reservePerYear,equityRatio,customerResults,supplierResults,stopDays,decrease,gpLoss,extra,fixedCashNeed,postStopOp,cashGap,checkedCount,interLevel,interLabel,allRisks});
+  renderPrompt({sales,gp,op,cash,equity,emp,monthlyOut,endurance,targetEquity,equityGap,reservePerYear,customerResults,supplierResults,stopDays,decrease,gpLoss,extra,postStopOp,cashGap,checkedCount,allRisks});
+}
+
+function metric(label,value,small,cls){ return `<div class="metric col-3 ${cls||''}"><div class="label">${label}</div><div class="value">${value}</div><small>${small||''}</small></div>`; }
+function badge(level,label){
+  const cls = level==='red'?'b-red':level==='yellow'?'b-yellow':level==='blue'?'b-blue':level==='green'?'b-green':'b-gray';
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function renderReport(d){
+  const top = d.allRisks.slice(0,3);
+  const action = [s('transferMemo')&&`移転：${s('transferMemo')}`, s('avoidMemo')&&`回避：${s('avoidMemo')}`, s('retainMemo')&&`保有：${s('retainMemo')}`, s('reduceMemo')&&`低減：${s('reduceMemo')}`].filter(Boolean);
+  const report = document.getElementById('report');
+  report.innerHTML = `
+    <div class="report-title"><div><h2>リスクアセスメント簡易レポート</h2><small>財務数字から考えるリスクマネジメント入口資料</small></div><div><strong>${escapeHTML(s('clientCode')||'匿名案件')}</strong><br><small>${escapeHTML(s('industry'))}　${escapeHTML(s('date'))}</small></div></div>
+    <div class="kpiLine">
+      <div class="metric"><div class="label">年間粗利益</div><div class="value">${yen(d.gp)}</div><small>売上停止時の影響基準</small></div>
+      <div class="metric"><div class="label">営業利益</div><div class="value">${yen(d.op)}</div><small>粗利益喪失と比較</small></div>
+      <div class="metric"><div class="label">無収入耐久</div><div class="value">${d.endurance.toFixed(1)}か月</div><small>現預金÷月固定支出</small></div>
+      <div class="metric"><div class="label">自己資本不足</div><div class="value">${yen(d.equityGap)}</div><small>BAST等基準との差額</small></div>
+    </div>
+    <h3>1. 優先して確認したいリスク</h3>
+    <table><thead><tr><th>区分</th><th>評価</th><th>内容</th></tr></thead><tbody>${top.map(r=>`<tr><td>${r.type}</td><td>${badge(r.level,r.label)}</td><td>${escapeHTML(r.text)}</td></tr>`).join('')}</tbody></table>
+    <h3>2. 事業停止・収益途絶の試算</h3>
+    <table><tbody>
+      <tr><th>想定</th><td>${d.stopDays}日間、売上が${Math.round(d.decrease*100)}%減少</td></tr>
+      <tr><th>粗利益喪失額</th><td>${yen(d.gpLoss)}</td></tr>
+      <tr><th>追加費用</th><td>${yen(d.extra)}</td></tr>
+      <tr><th>停止後営業利益</th><td>${yen(d.postStopOp)}</td></tr>
+      <tr><th>初動準備</th><td>${d.checkedCount}/6項目</td></tr>
+    </tbody></table>
+    <h3>3. 自己資本目標</h3>
+    <table><tbody>
+      <tr><th>現在の自己資本</th><td>${yen(d.equity)}</td><th>現在の1人当たり自己資本</th><td>${yen(d.equityPerEmp)}</td></tr>
+      <tr><th>目標自己資本</th><td>${yen(d.targetEquity)}</td><th>必要な年間内部留保</th><td>${yen(d.reservePerYear)}</td></tr>
+    </tbody></table>
+    <h3>4. 対応方針メモ</h3>
+    <ul>${(action.length?action:['次回までに、移転・回避・保有・低減のどの対応を取るか確認する。']).map(x=>`<li>${escapeHTML(x)}</li>`).join('')}</ul>
+    <h3>5. 次回までの宿題</h3>
+    <ul>${suggestActions(d).map(x=>`<li>${escapeHTML(x)}</li>`).join('')}</ul>
+    <p class="note">※本レポートは、巡回監査におけるリスク確認の入口資料です。補償内容・保険商品・法的判断等は、必要に応じて専門家へ確認してください。</p>
+  `;
+}
+
+function suggestActions(d){
+  const arr=[];
+  if(d.customerResults.some(r=>r.level==='red')) arr.push('主要取引先が停止した場合の代替先・回収条件・与信限度額を確認する。');
+  if(d.supplierResults.some(r=>r.level==='red' || r.alt==='未確認')) arr.push('主要仕入先が停止した場合の在庫日数と代替仕入先を確認する。');
+  if(d.postStopOp<0 || d.checkedCount<=3) arr.push('売上停止時の初動手順、外注先、仮移転先、主要取引先への連絡方法を確認する。');
+  if(d.equityGap>0) arr.push('BAST等を参考に、目標自己資本額と年間内部留保目標を確認する。');
+  if(d.endurance<3) arr.push('現預金・緊急資金枠により、最低何か月分の固定支出を保有するか確認する。');
+  if(!arr.length) arr.push('今回確認した内容を年1回更新し、主要取引先・仕入先・自己資本の変化を確認する。');
+  return arr;
+}
+
+function renderPrompt(d){
+  const top = d.allRisks.slice(0,5).map(r=>`- ${r.type}：${r.text}`).join('\n');
+  const prompt = `あなたはTKC会計事務所のリスクマネジメント支援担当です。以下の情報は匿名化されています。関与先名・正式取引先名・住所・個人名を推測せず、固有名詞を使わずに作成してください。\n以下の財務数字とヒアリング結果をもとに、巡回監査担当者が関与先に自然に説明できる「30秒トーク」「次回までの宿題」「リスク対応（移転・回避・保有・低減）の候補」を作成してください。保険販売ではなく、財務数字を起点にした経営助言として表現してください。\n\n【匿名化情報】\n匿名管理ID：${s('clientCode') || '未入力'}\n業種：${s('industry')}\n\n【財務概要】\n年間売上高：${yen(d.sales)}\n年間粗利益：${yen(d.gp)}\n営業利益：${yen(d.op)}\n現預金：${yen(d.cash)}\n自己資本：${yen(d.equity)}\n月間固定支出：${yen(d.monthlyOut)}\n無収入耐久月数：${d.endurance.toFixed(1)}か月\n目標自己資本：${yen(d.targetEquity)}\n自己資本不足額：${yen(d.equityGap)}\n\n【事業停止試算】\n${d.stopDays}日停止、売上減少率${Math.round(d.decrease*100)}%\n粗利益喪失額：${yen(d.gpLoss)}\n追加費用：${yen(d.extra)}\n停止後営業利益：${yen(d.postStopOp)}\n初動準備：${d.checkedCount}/6項目\n\n【主なリスク】\n${top}\n\n【出してほしい内容】\n1. 関与先に伝える30秒トーク（固有名詞なし）\n2. リスクの特定・分析・評価をやさしく整理\n3. 移転・回避・保有・低減の対応候補\n4. 次回までの宿題を3つ\n5. 職員が言ってはいけない断定表現の注意点`;
+  document.getElementById('aiPrompt').textContent = prompt;
+}
+
+function getData(){
+  const data={values:{},checks:{}};
+  ids.forEach(id=>data.values[id]=s(id));
+  for(let i=1;i<=5;i++) ['Name','Sales','GP','Recv','Replace','Resp'].forEach(k=>data.values[`c${i}${k}`]=s(`c${i}${k}`));
+  for(let i=1;i<=3;i++) ['Name','Item','Purchase','AffectedSales','Stock','AltDays','CostInc','Alt','Resp'].forEach(k=>data.values[`sp${i}${k}`]=s(`sp${i}${k}`));
+  checks.forEach(id=>data.checks[id]=document.getElementById(id).checked);
+  return data;
+}
+function setData(data){
+  if(!data || !data.values) return;
+  Object.entries(data.values).forEach(([id,val])=>{const el=document.getElementById(id); if(el) el.value=val;});
+  if(data.checks) Object.entries(data.checks).forEach(([id,val])=>{const el=document.getElementById(id); if(el) el.checked=!!val;});
+  calc();
+}
+function saveLocal(){ localStorage.setItem('tkcRismaneAssessmentIntro', JSON.stringify(getData())); alert('この端末のブラウザに保存しました。'); }
+function loadLocal(){ const raw=localStorage.getItem('tkcRismaneAssessmentIntro'); if(!raw) return alert('保存データがありません。'); setData(JSON.parse(raw)); }
+function downloadJSON(){ const blob=new Blob([JSON.stringify(getData(),null,2)],{type:'application/json'}); downloadBlob(blob,`tkc_rismane_${dateStamp()}.json`); }
+function downloadCSV(){
+  const d=getData(); const rows=[['項目','値']];
+  Object.entries(d.values).forEach(([k,v])=>rows.push([k,v]));
+  Object.entries(d.checks).forEach(([k,v])=>rows.push([k,v?'TRUE':'FALSE']));
+  const csv=rows.map(r=>r.map(x=>`"${String(x).replaceAll('"','""')}"`).join(',')).join('\n');
+  downloadBlob(new Blob(['\ufeff'+csv],{type:'text/csv'}),`tkc_rismane_${dateStamp()}.csv`);
+}
+function downloadBlob(blob,filename){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click(); URL.revokeObjectURL(a.href); }
+function dateStamp(){ return new Date().toISOString().slice(0,10).replaceAll('-',''); }
+function resetAll(){ if(!confirm('入力内容をリセットしますか？')) return; document.querySelectorAll('input,textarea').forEach(el=>{ if(el.type==='checkbox') el.checked=false; else if(el.id==='businessDays') el.value=240; else if(el.id==='targetYears') el.value=5; else if(el.id==='stopDays') el.value=30; else if(el.id==='decreaseRate') el.value=100; else if(el.type==='date') el.value=new Date().toISOString().slice(0,10); else el.value='';}); document.querySelectorAll('select').forEach(el=>el.selectedIndex=0); calc(); }
+function fillSample(){
+  set('clientCode','案件01'); set('industry','製造業'); set('assessor','T'); set('date',new Date().toISOString().slice(0,10));
+  set('sales',180000000); set('grossProfit',63000000); set('operatingIncome',8000000); set('cash',18000000); set('equity',22000000); set('totalAssets',120000000); set('employees',18); set('monthlyFixed',4200000); set('monthlyDebt',900000); set('bastEquityPerEmp',2500000); set('targetYears',5);
+  set('c1Name','主要取引先A'); set('c1Sales',62000000); set('c1GP',22000000); set('c1Recv',13000000); set('c1Replace',6); set('c1Resp','低減');
+  set('c2Name','取引先B'); set('c2Sales',27000000); set('c2GP',7000000); set('c2Recv',4200000); set('c2Replace',3);
+  set('sp1Name','主要仕入先X'); set('sp1Item','専用部材'); set('sp1Purchase',36000000); set('sp1AffectedSales',90000000); set('sp1Stock',10); set('sp1AltDays',40); set('sp1CostInc',12); set('sp1Alt','未確認'); set('sp1Resp','低減');
+  set('stopDays',30); set('decreaseRate',80); set('outsourcingCost',2500000); set('temporaryCost',1200000); set('logisticsCost',600000); set('recoveryCost',800000); set('recoveryPrepared','一部あり');
+  document.getElementById('chkOrders').checked=true; document.getElementById('chkCustomers').checked=true; document.getElementById('chkFinance').checked=true;
+  set('interruptionMemo','工場が止まると納品遅延により主要取引先Aを失う可能性がある。外注先と代替仕入先が未確定。');
+  set('retainMemo','現預金で最低3か月分の固定支出を確保する。BAST等を参考に自己資本目標を設定する。');
+  set('reduceMemo','主要取引先・仕入先の分散、代替外注先、在庫日数、緊急連絡先を確認する。');
+  calc();
+}
+function copyPrompt(){ navigator.clipboard.writeText(document.getElementById('aiPrompt').textContent).then(()=>alert('AIメモをコピーしました。')).catch(()=>alert('コピーできませんでした。手動で選択してください。')); }
+function escapeHTML(str){ return String(str||'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m])); }
+
+document.addEventListener('input', e=>calc());
+document.addEventListener('change', e=>calc());
+document.getElementById('jsonFile').addEventListener('change', e=>{
+  const file=e.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>{ try{ setData(JSON.parse(reader.result)); } catch(err){ alert('JSONを読み込めませんでした。'); } }; reader.readAsText(file); e.target.value='';
+});
+initTables();
+set('date',new Date().toISOString().slice(0,10));
+calc();
+</script>
+</body>
+</html>

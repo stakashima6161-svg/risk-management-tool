@@ -1,0 +1,46 @@
+{
+  "note": "匿名サンプル。実在の関与先名・取引先名は入れない。金額は万円単位の想定。",
+  "financial_inputs": {
+    "industry_label": "製造業・匿名サンプル",
+    "employees": 20,
+    "annual_sales": 30000,
+    "annual_gross_profit": 9000,
+    "operating_profit": 1200,
+    "cash_and_deposits": 2500,
+    "equity": 6000,
+    "monthly_fixed_cost": 550,
+    "monthly_debt_repayment": 180,
+    "annual_business_days": 240,
+    "bast_equity_per_employee": 500
+  },
+  "customer_dependency": [
+    {
+      "label": "取引先A",
+      "annual_sales": 9000,
+      "annual_gross_profit": 2700,
+      "accounts_receivable": 1500,
+      "substitutability": "low"
+    }
+  ],
+  "supplier_stop": [
+    {
+      "label": "仕入先X",
+      "dependent_sales": 8000,
+      "dependent_gross_profit": 2400,
+      "inventory_days": 10,
+      "alternative_supplier": "unknown",
+      "days_to_switch": 30,
+      "cost_increase_rate": 10
+    }
+  ],
+  "business_interruption": {
+    "stop_days": 30,
+    "sales_decrease_rate": 100
+  },
+  "risk_response_selected": {
+    "customer_dependency": ["低減", "保有"],
+    "supplier_stop": ["低減", "保有"],
+    "business_interruption": ["移転", "低減", "保有"],
+    "capital_strength": ["保有"]
+  }
+}

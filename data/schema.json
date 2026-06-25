@@ -1,0 +1,61 @@
+{
+  "project": "TKC財務リスマネ・アセスメント入門ツール",
+  "privacy_policy": {
+    "no_client_name": true,
+    "no_address": true,
+    "no_personal_names": true,
+    "no_real_customer_or_supplier_names": true,
+    "use_anonymous_labels": ["取引先A", "取引先B", "仕入先X", "仕入先Y"],
+    "external_api": false
+  },
+  "financial_inputs": {
+    "industry_label": "string_optional_anonymous",
+    "employees": "number",
+    "annual_sales": "number_yen_or_man_yen",
+    "annual_gross_profit": "number_yen_or_man_yen",
+    "operating_profit": "number_yen_or_man_yen",
+    "cash_and_deposits": "number_yen_or_man_yen",
+    "equity": "number_yen_or_man_yen",
+    "monthly_fixed_cost": "number_yen_or_man_yen",
+    "monthly_debt_repayment": "number_yen_or_man_yen",
+    "annual_business_days": "number_default_240",
+    "bast_equity_per_employee": "number_yen_or_man_yen"
+  },
+  "risks": {
+    "customer_dependency": {
+      "label": "取引先A",
+      "annual_sales": "number",
+      "annual_gross_profit": "number",
+      "accounts_receivable": "number",
+      "substitutability": "high_medium_low_unknown",
+      "calculated": ["gross_profit_dependency_rate", "profit_after_loss", "rating"]
+    },
+    "supplier_stop": {
+      "label": "仕入先X",
+      "dependent_sales": "number",
+      "dependent_gross_profit": "number",
+      "inventory_days": "number",
+      "alternative_supplier": "yes_no_unknown",
+      "days_to_switch": "number",
+      "cost_increase_rate": "percent",
+      "calculated": ["lost_gross_profit", "additional_cost", "rating"]
+    },
+    "business_interruption": {
+      "stop_days": "number",
+      "sales_decrease_rate": "percent",
+      "calculated": ["lost_gross_profit", "profit_after_interruption", "cash_runway_months", "rating"]
+    },
+    "capital_strength": {
+      "calculated": ["target_equity", "equity_shortage", "equity_per_employee", "rating"]
+    }
+  },
+  "risk_response_options": ["移転", "回避", "保有", "低減"],
+  "report_outputs": [
+    "priority_risks",
+    "financial_impact_summary",
+    "recommended_response_options",
+    "interview_talk",
+    "next_actions",
+    "ai_prompt_anonymized"
+  ]
+}

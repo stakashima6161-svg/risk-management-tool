@@ -1,0 +1,10 @@
+含まれるファイル
+- index.html：GitHub Pages用の単一HTML本体
+- README.md：基本説明
+- CLAUDE.md：Claude Codeへの作業指示
+- docs/requirements.md：要件定義メモ
+- docs/risk_assessment_words.md：表現ガイド
+- data/schema.json：データ構造定義
+- data/sample_case_anonymous.json：匿名サンプルデータ
+- prompts/claude_code_start_prompt.md：Claude Code開始用プロンプト
+- prompts/ai_memo_prompt_template.md：AIメモ生成テンプレート
